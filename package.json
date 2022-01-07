@@ -1,18 +1,19 @@
 {
-  "name": "graph",
-  "widgetName": "Graph",
+  "name": "select",
+  "widgetName": "Select",
   "version": "1.2.6",
   "description": "My widget description",
   "packagePath": "mendixcn",
   "author": "wengao.liu@siemens.com",
   "dependencies": {
     "ahooks": "^2.10.14",
+    "antd": "^4.16.13",
     "classnames": "^2.2.6"
   },
   "scripts": {
     "m": "npm install -g cnpm rollup prettier eslint --registry=https://registry.npmmirror.com",
     "x": "npm i --registry=https://registry.npmmirror.com",
-    "testProject": "cmd /c git clone https://gitee.com/engalar/mendix-testproject-800.git --depth=1 ./tests/testProject && rd /s /q  .\\tests\\testProject\\.git",
+    "testProject": "cmd /c git clone https://gitee.com/engalar/mendix-testproject-905.git --depth=1 ./tests/testProject && rd /s /q  .\\tests\\testProject\\.git",
     "r": "node ./script/rename.js",
     "u": "node ./script/update.js",
     "start": "pluggable-widgets-tools start:web",
