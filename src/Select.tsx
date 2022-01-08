@@ -101,7 +101,7 @@ export default function (props: SelectContainerProps) {
             props.selectList &&
             props.optionValueM
         ) {
-            if (props.selectList && props.selectList.status === ValueStatus.Available) {
+            if (props.selectList && props.selectList.status === ValueStatus.Available && props.onDeselectM !== undefined) {
                 const listValue = props.selectList.items?.map(obj => props.optionValueM!.get(obj).value!.toString());
                 setValue(listValue ?? []);
                 props.value?.setValue((listValue ?? []).join(","));
@@ -110,8 +110,18 @@ export default function (props: SelectContainerProps) {
     }, [props.selectList]);
 
     useEffect(() => {
-        if (!props.isMultiConst && props.value && props.value.status === ValueStatus.Available) {
-            setValue(props.value.value);
+        if (props.value && props.value.status === ValueStatus.Available) {
+            if (props.isMultiConst) {
+                if (props.onDeselectM === undefined) {
+                    if (props.value.value) {
+                        setValue(props.value.value?.split(','));
+                    } else {
+                        setValue([]);
+                    }
+                }
+            } else {
+                setValue(props.value.value);
+            }
         }
     }, [props.value]);
 
@@ -140,6 +150,11 @@ export default function (props: SelectContainerProps) {
                 } else {
                     setInterval(undefined);
                 }
+            }
+            if (!props.selectList) {
+                props.value?.setValue(undefined);
+                setValue(undefined);
+                setInterval(undefined);
             }
         },
         interval,
@@ -170,12 +185,28 @@ export default function (props: SelectContainerProps) {
                 }
                 if (!props.isMultiConst) {
                     props.value?.setValue(_value);
+                } else {
+                    if (!props.onSelect && props.value && props.value.value !== undefined) {
+                        if (props.value.value === '') {
+                            props.value.setValue(_value);
+                        } else {
+                            const os = props.value.value.split(',');
+                            if (os.indexOf(_value) === -1) {
+                                props.value.setValue(`${props.value.value},${_value}`);
+                            }
+                        }
+                    }
                 }
             }}
             onDeselect={(_value: any, option: any) => {
                 const obj = props.selectList?.items?.find(d => d.id === option.id);
                 if (obj) {
                     props.onDeselectM?.get(obj).execute();
+                }
+                if (props.isMultiConst && !props.onDeselectM && props.value && props.value.value) {
+                    const os = props.value.value.split(',');
+                    const newValue = os.filter(d => d !== _value).join(',');
+                    props.value.setValue(newValue);
                 }
             }}
             onClear={() => {
