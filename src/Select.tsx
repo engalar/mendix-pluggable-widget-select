@@ -6,7 +6,7 @@ import { Button, Select } from "antd";
 import { SelectContainerProps } from "../typings/SelectProps";
 
 import "./ui/index.scss";
-import { useDebounceFn, useInterval, useMount, usePrevious, useWhyDidYouUpdate } from "ahooks";
+import { useDebounceFn, useInterval, useMount, usePrevious } from "ahooks";
 
 const LOADING_STRING = "_-_";
 const PAGE_SIZE = 50;
@@ -87,7 +87,7 @@ export default function (props: SelectContainerProps) {
 
     const { run } = useDebounceFn(
         (offset, _) => {
-            if (Math.abs(offset - props.options.offset) % 50 > 15) {
+            if (offset < props.options.offset || offset + 8 > props.options.offset + props.options.items!.length) {
                 props.options.setOffset(Math.max(0, offset - 1));
             }
         },
@@ -126,6 +126,7 @@ export default function (props: SelectContainerProps) {
     }, [props.value]);
 
     useEffect(() => {
+        props.options.setOffset(0);
         if (searchValue) {
             const attrStr = attribute(props.optionValue.id);
             const subStr = literal(searchValue);
@@ -135,6 +136,7 @@ export default function (props: SelectContainerProps) {
         } else {
             props.options.setFilter(undefined);
         }
+        props.options.reload();
     }, [searchValue]);
 
     useEffect(() => {
@@ -165,8 +167,6 @@ export default function (props: SelectContainerProps) {
         props.options.setLimit(PAGE_SIZE);
         props.options.requestTotalCount(true);
     });
-
-    useWhyDidYouUpdate(props.name, { ...props, _options: options, showCreate, searchValue });
 
     return (
         <Select
@@ -232,7 +232,7 @@ export default function (props: SelectContainerProps) {
                 run(Math.floor(e.currentTarget.scrollTop / 32), e.currentTarget.clientHeight / 32);
             }}
             mode={props.isMultiConst ? "multiple" : undefined}
-            options={dropdownVisible ? (options ? options : preOptions) : options}
+            options={dropdownVisible ? options ?? preOptions : options}
             onSearch={setSearchValue}
             showSearch
             dropdownRender={menu => (
