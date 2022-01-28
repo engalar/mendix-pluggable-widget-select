@@ -1,7 +1,7 @@
 {
   "name": "select",
   "widgetName": "Select",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "My widget description",
   "packagePath": "mendixcn",
   "author": "wengao.liu@siemens.com",
