@@ -12,4 +12,3 @@ export class preview extends Component<SelectPreviewProps> {
 export function getPreviewCss(): string {
     return require("./ui/index.scss");
 }
-

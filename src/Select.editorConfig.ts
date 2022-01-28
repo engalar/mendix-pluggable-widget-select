@@ -94,4 +94,3 @@ export function getPreview(values: SelectPreviewProps): StructurePreviewProps | 
         ]
     };
 }
-

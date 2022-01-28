@@ -101,7 +101,11 @@ export default function (props: SelectContainerProps) {
             props.selectList &&
             props.optionValueM
         ) {
-            if (props.selectList && props.selectList.status === ValueStatus.Available && props.onDeselectM !== undefined) {
+            if (
+                props.selectList &&
+                props.selectList.status === ValueStatus.Available &&
+                props.onDeselectM !== undefined
+            ) {
                 const listValue = props.selectList.items?.map(obj => props.optionValueM!.get(obj).value!.toString());
                 setValue(listValue ?? []);
                 props.value?.setValue((listValue ?? []).join(","));
@@ -114,7 +118,7 @@ export default function (props: SelectContainerProps) {
             if (props.isMultiConst) {
                 if (props.onDeselectM === undefined) {
                     if (props.value.value) {
-                        setValue(props.value.value?.split(','));
+                        setValue(props.value.value?.split(","));
                     } else {
                         setValue([]);
                     }
@@ -187,10 +191,10 @@ export default function (props: SelectContainerProps) {
                     props.value?.setValue(_value);
                 } else {
                     if (!props.onSelect && props.value && props.value.value !== undefined) {
-                        if (props.value.value === '') {
+                        if (props.value.value === "") {
                             props.value.setValue(_value);
                         } else {
-                            const os = props.value.value.split(',');
+                            const os = props.value.value.split(",");
                             if (os.indexOf(_value) === -1) {
                                 props.value.setValue(`${props.value.value},${_value}`);
                             }
@@ -204,8 +208,8 @@ export default function (props: SelectContainerProps) {
                     props.onDeselectM?.get(obj).execute();
                 }
                 if (props.isMultiConst && !props.onDeselectM && props.value && props.value.value) {
-                    const os = props.value.value.split(',');
-                    const newValue = os.filter(d => d !== _value).join(',');
+                    const os = props.value.value.split(",");
+                    const newValue = os.filter(d => d !== _value).join(",");
                     props.value.setValue(newValue);
                 }
             }}
