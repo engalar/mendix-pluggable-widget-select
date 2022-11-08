@@ -1,0 +1,25 @@
+@import "../../node_modules/antd/dist/antd";
+.mxcn-select {
+    .ant-select-selector {
+        flex: auto;
+    }
+
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        border: unset;
+    }
+}
+
+.mxcn-select-dropdown {
+    .ant-btn {
+        display: flex;
+        align-items: flex-start;
+        padding: 0;
+    }
+    .on-create-text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        flex: 1;
+        background-color: aquamarine;
+    }
+}
