@@ -176,102 +176,104 @@ export default function (props: SelectContainerProps) {
     return (
         <FormGroup label={props.labelString} isShowLabel={props.showLabel}>
             <Select
-            loading={props.options.status === ValueStatus.Loading}
-            className="mxcn-select form-control"
-            allowClear
-            maxTagCount="responsive"
-            open={open}
-            value={value}
-            listItemHeight={32}
-            onChange={onChange}
-            onSelect={(_value: any, option: any) => {
-                const obj = props.options?.items?.find(d => d.id === option.id);
-                if (obj) {
-                    props.onSelect?.get(obj).execute();
-                }
-                if (!props.isMultiConst) {
-                    props.value?.setValue(_value);
-                } else {
-                    if (!props.onSelect && props.value && props.value.value !== undefined) {
-                        if (props.value.value === "") {
-                            props.value.setValue(_value);
-                        } else {
-                            const os = props.value.value.split(",");
-                            if (os.indexOf(_value) === -1) {
-                                props.value.setValue(`${props.value.value},${_value}`);
+                loading={props.options.status === ValueStatus.Loading}
+                className="mxcn-select form-control"
+                allowClear
+                maxTagCount="responsive"
+                open={open}
+                value={value}
+                listItemHeight={32}
+                onChange={onChange}
+                onSelect={(_value: any, option: any) => {
+                    const obj = props.options?.items?.find(d => d.id === option.id);
+                    if (obj) {
+                        props.onSelect?.get(obj).execute();
+                    }
+                    if (!props.isMultiConst) {
+                        props.value?.setValue(_value);
+                    } else {
+                        if (!props.onSelect && props.value && props.value.value !== undefined) {
+                            if (props.value.value === "") {
+                                props.value.setValue(_value);
+                            } else {
+                                const os = props.value.value.split(",");
+                                if (os.indexOf(_value) === -1) {
+                                    props.value.setValue(`${props.value.value},${_value}`);
+                                }
                             }
                         }
                     }
-                }
-            }}
-            onDeselect={(_value: any, option: any) => {
-                const obj = props.selectList?.items?.find(d => d.id === option.id);
-                if (obj) {
-                    props.onDeselectM?.get(obj).execute();
-                }
-                if (props.isMultiConst && !props.onDeselectM && props.value && props.value.value) {
-                    const os = props.value.value.split(",");
-                    const newValue = os.filter(d => d !== _value).join(",");
-                    props.value.setValue(newValue);
-                }
-            }}
-            onClear={() => {
-                if (props.isMultiConst) {
-                    setInterval(POLLING_TIME);
-                } else {
-                    const obj = props.options?.items?.find(d => props.optionValue.get(d).value === props.value?.value);
+                }}
+                onDeselect={(_value: any, option: any) => {
+                    const obj = props.selectList?.items?.find(d => d.id === option.id);
                     if (obj) {
-                        props.onDeselect?.get(obj).execute();
+                        props.onDeselectM?.get(obj).execute();
                     }
-                }
-                props.value?.setTextValue("");
-                setSearchValue("");
-            }}
-            onDropdownVisibleChange={o => {
-                if (!o) {
+                    if (props.isMultiConst && !props.onDeselectM && props.value && props.value.value) {
+                        const os = props.value.value.split(",");
+                        const newValue = os.filter(d => d !== _value).join(",");
+                        props.value.setValue(newValue);
+                    }
+                }}
+                onClear={() => {
+                    if (props.isMultiConst) {
+                        setInterval(POLLING_TIME);
+                    } else {
+                        const obj = props.options?.items?.find(
+                            d => props.optionValue.get(d).value === props.value?.value
+                        );
+                        if (obj) {
+                            props.onDeselect?.get(obj).execute();
+                        }
+                    }
+                    props.value?.setTextValue("");
                     setSearchValue("");
-                }
-                setOpen(o);
-                setDropdownVisible(o);
-            }}
-            onPopupScroll={e => {
-                run(Math.floor(e.currentTarget.scrollTop / 32), e.currentTarget.clientHeight / 32);
-            }}
-            mode={props.isMultiConst ? "multiple" : undefined}
-            options={dropdownVisible ? options ?? preOptions : options}
-            onSearch={setSearchValue}
-            showSearch
-            dropdownRender={menu => (
-                <div className="mxcn-select-dropdown">
-                    {menu}
-                    {showCreate ? (
-                        <div aria-selected="false" className="ant-select-item ant-select-item-option">
-                            <div className="ant-select-item-option-content">
-                                <Button
-                                    loading={onCreateLoading}
-                                    block
-                                    type="text"
-                                    onClick={() => {
-                                        onCreate(searchValue);
-                                    }}
-                                >
-                                    创建并选择&nbsp;
-                                    <span title={searchValue} className="on-create-text">
-                                        {searchValue}
-                                    </span>
-                                </Button>
+                }}
+                onDropdownVisibleChange={o => {
+                    if (!o) {
+                        setSearchValue("");
+                    }
+                    setOpen(o);
+                    setDropdownVisible(o);
+                }}
+                onPopupScroll={e => {
+                    run(Math.floor(e.currentTarget.scrollTop / 32), e.currentTarget.clientHeight / 32);
+                }}
+                mode={props.isMultiConst ? "multiple" : undefined}
+                options={dropdownVisible ? options ?? preOptions : options}
+                onSearch={setSearchValue}
+                showSearch
+                dropdownRender={menu => (
+                    <div className="mxcn-select-dropdown">
+                        {menu}
+                        {showCreate ? (
+                            <div aria-selected="false" className="ant-select-item ant-select-item-option">
+                                <div className="ant-select-item-option-content">
+                                    <Button
+                                        loading={onCreateLoading}
+                                        block
+                                        type="text"
+                                        onClick={() => {
+                                            onCreate(searchValue);
+                                        }}
+                                    >
+                                        创建并选择&nbsp;
+                                        <span title={searchValue} className="on-create-text">
+                                            {searchValue}
+                                        </span>
+                                    </Button>
+                                </div>
+                                <span
+                                    className="ant-select-item-option-state"
+                                    unselectable="on"
+                                    aria-hidden="true"
+                                    style={{ userSelect: "none" }}
+                                ></span>
                             </div>
-                            <span
-                                className="ant-select-item-option-state"
-                                unselectable="on"
-                                aria-hidden="true"
-                                style={{ userSelect: "none" }}
-                            ></span>
-                        </div>
-                    ) : null}
-                </div>
-            )}
-        ></Select>
+                        ) : null}
+                    </div>
+                )}
+            ></Select>
         </FormGroup>
     );
 }
